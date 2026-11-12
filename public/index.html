@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GameLock - PlayStation gift cards for Zimbabwe</title>
+<meta name="description" content="Buy South African PlayStation Store gift cards with EcoCash. Code delivered on screen in seconds.">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="demo-banner">DEMO SITE - no real payments are taken and codes are fake</div>
+<header>
+  <a class="logo" href="/">Game<span>Lock</span></a>
+  <nav><a href="/help/">Region &amp; redeem guide</a></nav>
+</header>
+<main>
+  <h1>PlayStation gift cards, paid with EcoCash</h1>
+  <p class="lead">Pick a card, approve on your phone, get your code on screen.</p>
+
+  <div class="notice">
+    <strong>Important:</strong> these are <strong>South African (ZAR) PlayStation Store</strong> cards.
+    They only work on a PSN account whose region is set to South Africa.
+    <a href="/help/">Check your account region</a>.
+  </div>
+
+  <h2>1. Choose a card</h2>
+  <div id="grid" class="grid" role="group" aria-label="Gift card values"><p class="lead">Loading cards...</p></div>
+
+  <form id="checkout" class="hidden" novalidate>
+    <h2 class="flush">2. Your details</h2>
+    <p id="summary" class="lead"></p>
+    <label for="email">Email (for your receipt)</label>
+    <input id="email" type="email" autocomplete="email" required>
+    <label for="phone">EcoCash number</label>
+    <input id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0771234567" required>
+    <label class="check"><input id="region" type="checkbox">
+      <span>My PSN account is set to <strong>South Africa</strong>. I understand codes are digital and non-refundable once delivered.</span></label>
+    <button id="submit" class="btn" type="submit">Pay with EcoCash</button>
+    <p id="error" class="error" role="alert"></p>
+  </form>
+</main>
+<footer>GameLock demo build. Not affiliated with Sony Interactive Entertainment. PlayStation is a trademark of its owner.</footer>
+<script src="/js/store.js"></script>
+</body>
+</html>

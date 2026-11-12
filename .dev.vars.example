@@ -1,0 +1,3 @@
+# Copy to .dev.vars (git-ignored). Demo key only - generate a real one for anything else:
+#   openssl rand -base64 32
+CODE_ENC_KEY=ZGVtby1vbmx5LWtleS1kby1ub3QtdXNlLWluLXByb2Q=
