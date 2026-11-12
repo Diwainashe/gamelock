@@ -1,81 +1,105 @@
 (() => {
+  const { h, money, face, api, state } = GL;
+  const root = document.getElementById('order');
   const token = new URLSearchParams(location.search).get('t');
-  const box = document.getElementById('state');
-  const demo = document.getElementById('demo');
-  let timer = null;
+  const POOL = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let timer = null, shownCode = null, scramble = null;
 
-  const el = (tag, text, cls) => { const n = document.createElement(tag); n.textContent = text; if (cls) n.className = cls; return n; };
-  const money = c => `$${(c / 100).toFixed(2)}`;
+  const TEXT = o => {
+    const eco = o.method === 'ecocash';
+    return {
+      created: null,
+      awaiting_payment: [eco ? 'Check your phone and enter your PIN' : 'Finish paying on the Paynow page',
+        eco ? `We sent an EcoCash prompt to ${o.phoneHint}. This page updates on its own, so you can close it and reopen the link later.`
+          : 'Complete the card payment in the Paynow window. This page updates when it goes through.'],
+      paid: ['Payment received, getting your code', 'This usually takes a few seconds.'],
+      fulfilling: ['Payment received, getting your code', 'This usually takes a few seconds.'],
+      fulfilment_unknown: ['We are on it', 'Your payment is safe. Your code is taking longer than usual. Keep this page and quote your reference if you contact us.'],
+      complete: ['Here is your code', 'Redeem it on your console or the app.'],
+      expired: ['This order expired', 'No payment arrived within 15 minutes. If you did pay, your code will still appear on this page.'],
+      failed: ['Something went wrong', `Your reference is ${o.reference}. Quote it when you contact us and we will send your code or refund you.`],
+    };
+  };
+  TEXT.fallback = ['Loading your order...', ''];
+
+  const stepIdx = s => ({ created: 0, awaiting_payment: 0, paid: 1, fulfilling: 1, fulfilment_unknown: 1, complete: 3 })[s];
+
+  /** Brief "decoding" reveal for the code; skipped for reduced motion. */
+  function reveal(el, target) {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = target; return; }
+    let i = 0; clearInterval(scramble);
+    scramble = setInterval(() => {
+      i += 0.4;
+      el.textContent = [...target].map((ch, k) => ch === '-' ? '-' : k < i ? ch : POOL[Math.floor(Math.random() * POOL.length)]).join('');
+      if (i >= target.length) { clearInterval(scramble); el.textContent = target; }
+    }, 40);
+  }
 
   function render(o) {
+    const [title, sub] = TEXT(o)[o.status] || TEXT.fallback;
     const kids = [];
-    const ref = el('p', `Reference: ${o.reference}`, 'lead');
-    switch (o.status) {
-      case 'created':
-      case 'awaiting_payment':
-        kids.push(el('h2', 'Check your phone and enter your PIN'),
-          el('p', `Approve the EcoCash request for ${money(o.amountCents)}. This page updates on its own.`));
-        break;
-      case 'paid':
-      case 'fulfilling':
-        kids.push(el('h2', 'Payment received, getting your code'), el('p', 'This usually takes a few seconds.'));
-        break;
-      case 'fulfilment_unknown':
-        kids.push(el('h2', 'We are on it'),
-          el('p', 'Your payment is safe. Your code is taking longer than usual. Keep this page and quote your reference if you contact us.'));
-        break;
-      case 'complete': {
-        kids.push(el('h2', 'Here is your code'), el('p', `${o.product}. Redeem it on a South African PSN account.`));
-        const code = el('div', o.code || '', 'code');
-        const copy = el('button', 'Copy code', 'btn');
-        copy.type = 'button';
-        copy.addEventListener('click', async () => {
-          try { await navigator.clipboard.writeText(o.code); copy.textContent = 'Copied'; }
-          catch { copy.textContent = 'Select and copy manually'; }
-        });
-        const help = el('a', 'How to redeem', 'btn secondary'); help.href = '/help/#redeem';
-        const row = el('div', '', 'row'); row.append(copy, help);
-        kids.push(code, row);
-        break;
-      }
-      case 'expired':
-        kids.push(el('h2', 'This order expired'),
-          el('p', 'We did not receive payment in time. If you did pay, it will still be processed. Otherwise you can start again.'));
-        break;
-      default:
-        kids.push(el('h2', 'Something went wrong'), el('p', 'Your order could not be completed. Quote your reference when you contact us.'));
+    kids.push(h('div', { class: 'ref' }, h('span', { text: `Order ${o.reference}` }), h('span', { text: `${o.product} · ${face(o.faceValue, o.faceCurrency)}` })));
+
+    const pending = ['created', 'awaiting_payment', 'paid', 'fulfilling', 'fulfilment_unknown'].includes(o.status);
+    if (['created', 'awaiting_payment', 'paid', 'fulfilling'].includes(o.status)) {
+      kids.push(h('div', { class: 'pulse', 'aria-hidden': 'true' }, h('i'), h('i'), h('div', { class: 'phone-ico' })));
     }
-    kids.push(ref);
+    kids.push(h('div', { class: 'stack' }, h('h2', { text: title }), h('p', { class: 'lead', text: sub })));
+
+    if (pending || o.status === 'complete') {
+      const idx = stepIdx(o.status), eco = o.method === 'ecocash';
+      const labels = [eco ? 'Approve on phone' : 'Pay on Paynow', 'Payment received', 'Code delivered'];
+      kids.push(h('div', {},
+        h('div', { class: `bar w${Math.min(idx, 3) === 3 ? 2 : idx}` }, h('i')),
+        h('ol', { class: 'stepper', 'aria-label': 'Progress' }, labels.map((l, i) =>
+          h('li', { class: i < idx ? 'done' : i === idx ? 'on' : '', 'aria-current': i === idx ? 'step' : null }, l)))));
+    }
+
+    if (o.status === 'complete' && o.code) {
+      const code = h('code', { 'aria-label': 'Your code', text: shownCode === o.code ? o.code : '' });
+      const copy = h('button', { class: 'btn sm', type: 'button', text: 'Copy', onclick: async () => {
+        try { await navigator.clipboard.writeText(o.code); copy.textContent = 'Copied'; } catch { copy.textContent = 'Select to copy'; }
+        setTimeout(() => { copy.textContent = 'Copy'; }, 1600);
+      } });
+      kids.push(h('div', { class: 'stack' }, h('div', { class: 'codebox' }, code, copy),
+        h('div', { class: 'row' }, h('a', { href: '/help/#redeem', text: 'How to redeem' }))));
+      if (shownCode !== o.code) { shownCode = o.code; reveal(code, o.code); }
+    }
+
     if (['expired', 'failed'].includes(o.status)) {
-      const again = el('a', 'Start a new order', 'btn'); again.href = '/'; kids.push(again);
+      kids.push(h('div', { class: 'btns' },
+        h('a', { class: 'btn', href: '/', text: o.status === 'expired' ? 'Start a new order' : 'Back to store' }),
+        h('a', { class: 'btn ghost', href: '/help/', text: 'Get help' })));
     }
-    box.replaceChildren(...kids);
-    demo.classList.toggle('hidden', !(o.demo && o.status === 'awaiting_payment'));
+
+    if (o.demo && o.status === 'awaiting_payment') {
+      kids.push(h('div', { class: 'demo-box' },
+        h('span', {}, `Demo control. On the live site this step happens ${o.method === 'ecocash' ? 'on your phone when you enter your EcoCash PIN' : 'on the Paynow page'}.`),
+        h('div', { class: 'btns' },
+          h('button', { class: 'btn sm', type: 'button', text: 'Simulate: approve payment', onclick: () => mockPay('paid') }),
+          h('button', { class: 'btn sm ghost', type: 'button', text: 'Simulate: cancel', onclick: () => mockPay('cancel') }))));
+    }
+    root.replaceChildren(...kids);
   }
 
   async function poll() {
     try {
-      const res = await fetch(`/api/orders/${encodeURIComponent(token)}`, { cache: 'no-store' });
-      if (res.status === 404) { box.replaceChildren(el('h2', 'Order not found'), el('p', 'Check the link you opened.')); return; }
-      const o = await res.json();
+      const o = await api(`/api/orders/${encodeURIComponent(token)}`, { cache: 'no-store' });
       render(o);
       if (['complete', 'failed'].includes(o.status)) return; // terminal: stop polling
-    } catch { /* transient network error: keep polling */ }
+    } catch (e) {
+      if (e.status === 404) { root.replaceChildren(h('h2', { text: 'Order not found' }), h('p', { class: 'lead', text: 'Check the link you opened.' }), h('a', { class: 'btn', href: '/', text: 'Back to store' })); return; }
+      /* transient network error: keep polling */
+    }
     timer = setTimeout(poll, 4000);
   }
 
   async function mockPay(outcome) {
-    document.querySelectorAll('#demo button').forEach(b => { b.disabled = true; });
-    await fetch(`/api/orders/${encodeURIComponent(token)}/mock-pay`, {
-      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ outcome }),
-    });
+    root.querySelectorAll('.demo-box button').forEach(b => { b.disabled = true; });
+    try { await api(`/api/orders/${encodeURIComponent(token)}/mock-pay`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ outcome }) }); } catch { /* poll will show the truth */ }
     clearTimeout(timer); poll();
   }
 
-  if (!token) { box.replaceChildren(el('h2', 'No order specified'), el('a', 'Back to store', 'btn')); box.lastChild.href = '/'; }
-  else {
-    document.getElementById('approve').addEventListener('click', () => mockPay('paid'));
-    document.getElementById('cancel').addEventListener('click', () => mockPay('cancel'));
-    poll();
-  }
+  if (!token) root.replaceChildren(h('h2', { text: 'No order specified' }), h('a', { class: 'btn', href: '/', text: 'Back to store' }));
+  else poll();
 })();

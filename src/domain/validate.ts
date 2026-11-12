@@ -10,10 +10,11 @@ export function normaliseZwPhone(input: string): string | null {
 export const orderInput = z.object({
   sku: z.string().min(1).max(64),
   email: z.string().trim().email('Enter a valid email address').max(254),
-  phone: z.string().max(20).transform((v, ctx) => {
-    const p = normaliseZwPhone(v);
-    if (!p) ctx.addIssue({ code: 'custom', message: 'Enter an EcoCash number, e.g. 0771234567' });
-    return p ?? '';
-  }),
-  regionConfirmed: z.literal(true, { message: 'Please confirm your PSN account is set to South Africa' }),
+  method: z.enum(['ecocash', 'card']),
+  phone: z.string().max(20).optional(),
+  regionConfirmed: z.boolean().optional(),
+}).superRefine((v, ctx) => {
+  if (v.method === 'ecocash' && !normaliseZwPhone(v.phone ?? '')) {
+    ctx.addIssue({ code: 'custom', path: ['phone'], message: 'Enter an EcoCash number, e.g. 077 123 4567' });
+  }
 });

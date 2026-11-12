@@ -8,8 +8,11 @@ const KEY = btoa('0123456789abcdef0123456789abcdef'); // 32 bytes
 
 describe('pricing', () => {
   it('rounds up in integer cents', () => {
-    expect(priceCents(100, 55000, 8)).toBe(594);
-    expect(priceCents(1, 55000, 8)).toBe(6); // 5.94c -> 6c, never below cost
+    expect(priceCents(100, 'ZAR', 55000, 8)).toBe(594);
+    expect(priceCents(1, 'ZAR', 55000, 8)).toBe(6); // 5.94c -> 6c, never below cost
+  });
+  it('prices USD cards from dollars', () => {
+    expect(priceCents(10, 'USD', 55000, 8)).toBe(1080);
   });
 });
 
@@ -20,9 +23,12 @@ describe('phone validation', () => {
   it.each(['0711234567', '0271234567', '12345', '+27821234567', ''])('rejects %s', p => {
     expect(normaliseZwPhone(p)).toBeNull();
   });
-  it('requires region confirmation', () => {
-    const r = orderInput.safeParse({ sku: 'x', email: 'a@b.co', phone: '0771234567', regionConfirmed: false });
-    expect(r.success).toBe(false);
+  it('requires a phone for EcoCash but not for card', () => {
+    const base = { sku: 'x', email: 'a@b.co' };
+    expect(orderInput.safeParse({ ...base, method: 'ecocash' }).success).toBe(false);
+    expect(orderInput.safeParse({ ...base, method: 'ecocash', phone: '0771234567' }).success).toBe(true);
+    expect(orderInput.safeParse({ ...base, method: 'card' }).success).toBe(true);
+    expect(orderInput.safeParse({ ...base, method: 'cash' }).success).toBe(false);
   });
 });
 

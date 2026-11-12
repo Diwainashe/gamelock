@@ -1,42 +1,68 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Region and redeem guide - GameLock</title>
+<title>Help - GameLock</title>
 <link rel="stylesheet" href="/css/style.css">
+<script src="/js/theme.js"></script>
 </head>
 <body>
-<div class="demo-banner">DEMO SITE - no real payments are taken and codes are fake</div>
-<header><a class="logo" href="/">Game<span>Lock</span></a><nav><a href="/">Store</a></nav></header>
+<div class="demo-bar">DEMO BUILD &middot; no real payments are taken and codes are fake</div>
+<header class="top">
+  <a class="brand" href="/"><span class="mark" aria-hidden="true"></span>GameLock</a>
+  <nav aria-label="Main">
+    <a class="hide-m" href="/">Store</a>
+    <a href="/help/" aria-current="page">Help</a>
+    <div class="seg" role="group" aria-label="Currency"><button type="button" data-cur="USD" aria-pressed="true">USD</button><button type="button" data-cur="ZWG" aria-pressed="false">ZWG</button></div>
+    <button class="theme" id="theme" type="button" aria-label="Switch between light and dark theme"><span></span></button>
+  </nav>
+</header>
 <main>
-  <h1>Region and redeem guide</h1>
-  <div class="notice">South Africa is the only African country with an official PlayStation Store, so you need a
-  <strong>South African (ZAR) PSN account</strong>. A code bought for another region will not redeem.</div>
-
-  <h2 id="region">Check my account region</h2>
-  <ol>
-    <li>On console: Settings &rarr; Users and Accounts &rarr; Account &rarr; Account Information &rarr; Region/Country.</li>
-    <li>In a browser: sign in to account.sonyentertainmentnetwork.com and open your profile details.</li>
-    <li>It must say <strong>South Africa</strong>.</li>
-  </ol>
-
-  <h2 id="create">I don't have a South African account</h2>
-  <p>Create a new PSN account and choose <strong>South Africa</strong> as the country. Region cannot be changed later on an
-  existing account, so a new account is the safe route. Games and funds on your current account do not transfer.
-  <em>(Demo placeholder: replace with the reviewed step-by-step guide and screenshots.)</em></p>
-
-  <h2 id="redeem">Redeem my code</h2>
-  <ul>
-    <li><strong>PS5:</strong> PlayStation Store &rarr; ... &rarr; Redeem Codes.</li>
-    <li><strong>PS4:</strong> PlayStation Store &rarr; Redeem Codes.</li>
-    <li><strong>Phone / browser:</strong> PlayStation Store &rarr; Redeem Code.</li>
-  </ul>
-  <p>Menu names change between system updates. <em>(Demo placeholder: add screenshots.)</em></p>
-
-  <h2>Refunds</h2>
-  <p>Codes are digital and non-refundable once delivered. <em>(Demo placeholder: replace with your confirmed policy text.)</em></p>
+<div class="help">
+  <div class="stack">
+    <h2>Help</h2>
+    <p class="lead">PlayStation codes from GameLock are for South African accounts. South Africa is the only African country with an official PlayStation Store.</p>
+  </div>
+  <div class="acc">
+    <details id="region" open>
+      <summary>Check your PSN account region</summary>
+      <ol>
+        <li>On PS5, open Settings &rarr; Users and Accounts &rarr; Account &rarr; Account Information.</li>
+        <li>Look at Country/Region. It must say South Africa.</li>
+        <li>If it shows another country, the card will not redeem. Create a South African account instead.</li>
+      </ol>
+      <div class="shot" role="img" aria-label="Placeholder for a screenshot of PS5 account information">screenshot &middot; PS5 account information</div>
+    </details>
+    <details id="create">
+      <summary>Create a South African PSN account</summary>
+      <ol>
+        <li>Choose Create an account on your console or on the PlayStation website.</li>
+        <li>Set Country/Region to South Africa. It cannot be changed later.</li>
+        <li>Verify your email, then sign in on your console.</li>
+      </ol>
+    </details>
+    <details id="redeem">
+      <summary>Redeem your code</summary>
+      <ol>
+        <li>PS5: open PlayStation Store, select &middot;&middot;&middot; at the top, then Redeem code.</li>
+        <li>Phone: open the PlayStation App, go to Store, then Redeem code.</li>
+        <li>Enter the code exactly as shown. The credit goes to your wallet.</li>
+      </ol>
+      <div class="shot" role="img" aria-label="Placeholder for a screenshot of the redeem code screen">screenshot &middot; redeem code screen</div>
+    </details>
+    <details id="refunds">
+      <summary>Refunds</summary>
+      <ol>
+        <li>Codes are digital and non-refundable once delivered.</li>
+        <li>If you paid and no code arrived, your order page shows a reference. Send it to support and we will resend the code or refund you.</li>
+      </ol>
+    </details>
+  </div>
+</div>
 </main>
-<footer>GameLock demo build.</footer>
+<footer>GameLock demo build. Help content is placeholder copy: replace screenshots and the refund policy with your reviewed text before launch.</footer>
+<script src="/js/common.js"></script>
+<script src="/js/help.js"></script>
 </body>
 </html>

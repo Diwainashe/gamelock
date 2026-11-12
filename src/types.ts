@@ -12,8 +12,8 @@ export type Status =
   | 'complete' | 'expired' | 'failed' | 'fulfilment_unknown';
 
 export interface OrderRow {
-  id: string; public_token: string; sku_id: string; email: string; phone: string;
-  amount_cents: number; face_zar: number; status: Status; refund_due: number;
+  id: string; public_token: string; sku_id: string; email: string; phone: string | null; method: 'ecocash' | 'card';
+  amount_cents: number; face_value: number; face_currency: 'ZAR' | 'USD'; status: Status; refund_due: number;
   needs_review: number; paynow_ref: string | null; poll_url: string | null;
   merchant_trace: string; supplier_ref: string | null;
   code_enc: ArrayBuffer | number[] | null; code_iv: ArrayBuffer | number[] | null;
