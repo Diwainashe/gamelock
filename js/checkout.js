@@ -23,12 +23,12 @@
       const body = { sku: item.sku, email: f.email.trim(), method: f.method, regionConfirmed: plat.needsRegion ? f.region : undefined };
       if (eco()) body.phone = '+263' + digits();
       const { token } = await api('/api/orders', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
-      location.href = `/order.html?t=${encodeURIComponent(token)}`;
+      location.href = `order.html?t=${encodeURIComponent(token)}`;
     } catch (ex) { els.err.textContent = ex.message; f.busy = false; sync(); }
   }
 
   function build() {
-    document.getElementById('back').href = `/product.html?p=${plat.id}&v=${item.sku}`;
+    document.getElementById('back').href = `product.html?p=${plat.id}&v=${item.sku}`;
     const mini = gcard(plat, '', false); mini.classList.add('mini'); mini.replaceChildren();
     const email = h('input', { id: 'email', type: 'email', autocomplete: 'email', placeholder: 'you@example.com', required: true,
       oninput: e => { f.email = e.target.value; sync(); } });
@@ -47,7 +47,7 @@
     const regionBox = plat.needsRegion ? h('label', { class: 'chk' },
       h('input', { type: 'checkbox', onchange: e => { f.region = e.target.checked; sync(); } }),
       h('span', {}, h('b', { text: plat.platform === 'psn' ? 'My PSN account is set to South Africa' : `My account region is ${plat.region}` }),
-        h('small', {}, 'Not sure? ', h('a', { href: '/help/#region', text: 'Check your region' })))) : null;
+        h('small', {}, 'Not sure? ', h('a', { href: 'help/#region', text: 'Check your region' })))) : null;
 
     const form = h('form', { class: 'form', novalidate: true, onsubmit: submit },
       h('h2', { text: 'Checkout' }),
@@ -71,7 +71,7 @@
 
   catalog().then(d => {
     item = d.products.find(p => p.sku === sku);
-    if (!item) { view.replaceChildren(h('p', { class: 'muted' }, 'Card not found. ', h('a', { href: '/', text: 'Back to the store' }))); return; }
+    if (!item) { view.replaceChildren(h('p', { class: 'muted' }, 'Card not found. ', h('a', { href: './', text: 'Back to the store' }))); return; }
     plat = platforms(d.products).find(p => p.id === item.platform);
     build(); onCurrency(paint);
   }).catch(() => { view.replaceChildren(h('p', { class: 'muted', text: 'Could not load checkout. Please refresh.' })); });

@@ -2,10 +2,6 @@ name = "gamelock"
 main = "src/index.ts"
 compatibility_date = "2026-10-01"
 
-[assets]
-directory = "./public"
-run_worker_first = ["/api/*"]
-
 [[d1_databases]]
 binding = "DB"
 database_name = "gamelock"
@@ -21,3 +17,4 @@ PAYNOW_MODE = "mock"      # mock | live (live not implemented yet)
 SUPPLIER = "mock"         # mock | bitrefill (bitrefill not implemented yet)
 ORDER_TTL_MIN = "15"
 MARKUP_PCT = "8"          # integer percent
+ALLOWED_ORIGIN = ""       # site origin allowed to call this API, e.g. "https://<user>.github.io"

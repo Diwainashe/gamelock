@@ -61,12 +61,7 @@
 
   let catalogP;
   function catalog() {
-    catalogP ??= fetch('/api/catalog').then(async r => {
-      const d = await r.json();
-      if (!r.ok) throw new Error(d.error || 'Could not load prices');
-      zwgRate = d.zwgPerUsd;
-      return d;
-    });
+    catalogP ??= GL_API('/api/catalog').then(d => { zwgRate = d.zwgPerUsd; return d; });
     return catalogP;
   }
   /** Group flat product rows into platforms, preserving catalogue order. */
@@ -99,13 +94,6 @@
     });
   }
 
-  async function api(path, opts) {
-    const res = await fetch(path, opts);
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw Object.assign(new Error(data.error || 'Something went wrong'), { status: res.status });
-    return data;
-  }
-
-  window.GL = { h, money, face, gcard, tilt, catalog, platforms, onCurrency, api, state };
+  window.GL = { h, money, face, gcard, tilt, catalog, platforms, onCurrency, api: GL_API, state };
   document.addEventListener('DOMContentLoaded', wireHeader);
 })();

@@ -4,6 +4,7 @@ export interface Env {
   SUPPLIER: 'mock' | 'bitrefill';
   ORDER_TTL_MIN: string;
   MARKUP_PCT: string;
+  ALLOWED_ORIGIN: string; // exact origin of the static site (CORS); empty = same-origin only
   CODE_ENC_KEY: string; // secret: base64, 32 bytes
 }
 

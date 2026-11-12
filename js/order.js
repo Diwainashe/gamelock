@@ -62,14 +62,14 @@
         setTimeout(() => { copy.textContent = 'Copy'; }, 1600);
       } });
       kids.push(h('div', { class: 'stack' }, h('div', { class: 'codebox' }, code, copy),
-        h('div', { class: 'row' }, h('a', { href: '/help/#redeem', text: 'How to redeem' }))));
+        h('div', { class: 'row' }, h('a', { href: 'help/#redeem', text: 'How to redeem' }))));
       if (shownCode !== o.code) { shownCode = o.code; reveal(code, o.code); }
     }
 
     if (['expired', 'failed'].includes(o.status)) {
       kids.push(h('div', { class: 'btns' },
-        h('a', { class: 'btn', href: '/', text: o.status === 'expired' ? 'Start a new order' : 'Back to store' }),
-        h('a', { class: 'btn ghost', href: '/help/', text: 'Get help' })));
+        h('a', { class: 'btn', href: './', text: o.status === 'expired' ? 'Start a new order' : 'Back to store' }),
+        h('a', { class: 'btn ghost', href: 'help/', text: 'Get help' })));
     }
 
     if (o.demo && o.status === 'awaiting_payment') {
@@ -88,7 +88,7 @@
       render(o);
       if (['complete', 'failed'].includes(o.status)) return; // terminal: stop polling
     } catch (e) {
-      if (e.status === 404) { root.replaceChildren(h('h2', { text: 'Order not found' }), h('p', { class: 'lead', text: 'Check the link you opened.' }), h('a', { class: 'btn', href: '/', text: 'Back to store' })); return; }
+      if (e.status === 404) { root.replaceChildren(h('h2', { text: 'Order not found' }), h('p', { class: 'lead', text: 'Check the link you opened.' }), h('a', { class: 'btn', href: './', text: 'Back to store' })); return; }
       /* transient network error: keep polling */
     }
     timer = setTimeout(poll, 4000);
@@ -100,6 +100,6 @@
     clearTimeout(timer); poll();
   }
 
-  if (!token) root.replaceChildren(h('h2', { text: 'No order specified' }), h('a', { class: 'btn', href: '/', text: 'Back to store' }));
+  if (!token) root.replaceChildren(h('h2', { text: 'No order specified' }), h('a', { class: 'btn', href: './', text: 'Back to store' }));
   else poll();
 })();

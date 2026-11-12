@@ -1,10 +1,15 @@
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 import type { Env } from './types';
 import { catalog } from './routes/catalog';
 import { orders } from './routes/orders';
 import { sweep } from './jobs/sweep';
 
 const app = new Hono<{ Bindings: Env }>();
+
+// The static site (GitHub Pages) lives on another origin, so allow exactly that one.
+app.use('/api/*', (c, next) =>
+  cors({ origin: c.env.ALLOWED_ORIGIN || '', allowMethods: ['GET', 'POST', 'OPTIONS'], allowHeaders: ['content-type'] })(c, next));
 
 app.route('/api/catalog', catalog);
 app.route('/api/orders', orders);

@@ -1,6 +1,6 @@
 /* GameLock - "Neon arcade" direction. Dark by default, light via [data-theme=light]. No inline styles anywhere (strict CSP). */
-@font-face{font-family:Unbounded;src:url(/fonts/unbounded-latin-wght-normal.woff2) format("woff2");font-weight:200 900;font-display:swap}
-@font-face{font-family:Manrope;src:url(/fonts/manrope-latin-wght-normal.woff2) format("woff2");font-weight:200 800;font-display:swap}
+@font-face{font-family:Unbounded;src:url(../fonts/unbounded-latin-wght-normal.woff2) format("woff2");font-weight:200 900;font-display:swap}
+@font-face{font-family:Manrope;src:url(../fonts/manrope-latin-wght-normal.woff2) format("woff2");font-weight:200 800;font-display:swap}
 
 :root,:root[data-theme=dark]{--bg:#09090e;--surface:#12121a;--fg:#eceef6;--muted:#8e91a5;--line:rgba(236,238,246,.1);--accent:#52f08f;--accent-text:#52f08f;--accent-fg:#07070b;--soft:#171721;--glow:0 0 28px rgba(82,240,143,.4);--warn:#f0b34a;--bad:#ff7b72}
 :root[data-theme=light]{--bg:#eef0f5;--surface:#fff;--fg:#0e0f18;--muted:#555a70;--line:rgba(14,15,24,.1);--accent:#3fdc7c;--accent-text:#16723a;--accent-fg:#07070b;--soft:#e3e6ee;--glow:0 8px 24px rgba(63,220,124,.35);--warn:#8a5a00;--bad:#b3261e}

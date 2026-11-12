@@ -3,26 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Checkout - GameLock</title>
-<link rel="stylesheet" href="/css/style.css">
-<script src="/js/theme.js"></script>
+<title>Gift card - GameLock</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="js/theme.js"></script>
 </head>
 <body>
 <div class="demo-bar">DEMO BUILD &middot; no real payments are taken and codes are fake</div>
 <header class="top">
-  <a class="brand" href="/"><span class="mark" aria-hidden="true"></span>GameLock</a>
+  <a class="brand" href="./"><span class="mark" aria-hidden="true"></span>GameLock</a>
   <nav aria-label="Main">
-    <a class="hide-m" href="/">Store</a>
-    <a href="/help/">Help</a>
+    <a class="hide-m" href="./" aria-current="page">Store</a>
+    <a href="help/">Help</a>
     <div class="seg" role="group" aria-label="Currency"><button type="button" data-cur="USD" aria-pressed="true">USD</button><button type="button" data-cur="ZWG" aria-pressed="false">ZWG</button></div>
     <button class="theme" id="theme" type="button" aria-label="Switch between light and dark theme"><span></span></button>
   </nav>
 </header>
 <main>
-  <a id="back" class="crumb" href="/">&larr; Back</a>
-  <div id="view" class="checkout"><p class="muted">Loading...</p></div>
+  <a class="crumb" href="./">&larr; All cards</a>
+  <div id="view" class="split"><p class="muted">Loading...</p></div>
 </main>
-<script src="/js/common.js"></script>
-<script src="/js/checkout.js"></script>
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/common.js"></script>
+<script src="js/product.js"></script>
 </body>
 </html>

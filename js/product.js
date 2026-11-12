@@ -11,7 +11,7 @@
     const note = h('div', { class: 'note' },
       h('b', { text: p.needsRegion ? `Only works on accounts set to ${p.region}.` : 'Works on any Steam account.' }),
       p.needsRegion ? h('span', { class: 'muted' }, 'A code for the wrong region will not redeem. ',
-        h('a', { href: '/help/#region', text: 'Check my account region' })) : null);
+        h('a', { href: 'help/#region', text: 'Check my account region' })) : null);
 
     view.replaceChildren(
       card,
@@ -28,12 +28,12 @@
         note,
         h('div', { class: 'pay-row' },
           h('div', { class: 'price' }, h('small', { text: 'You pay' }), h('b', { text: money(it.priceCents) })),
-          h('a', { class: 'btn', href: `/checkout.html?sku=${encodeURIComponent(it.sku)}`, text: 'Continue' }))));
+          h('a', { class: 'btn', href: `checkout.html?sku=${encodeURIComponent(it.sku)}`, text: 'Continue' }))));
   }
 
   catalog().then(d => {
     plat = platforms(d.products).find(p => p.id === q.get('p'));
-    if (!plat) { view.replaceChildren(h('p', { class: 'muted' }, 'Card not found. ', h('a', { href: '/', text: 'Back to the store' }))); return; }
+    if (!plat) { view.replaceChildren(h('p', { class: 'muted' }, 'Card not found. ', h('a', { href: './', text: 'Back to the store' }))); return; }
     document.title = `${plat.platformName} gift card - GameLock`;
     selected = plat.items.find(x => x.sku === q.get('v')) || plat.items[Math.min(1, plat.items.length - 1)];
     render(); onCurrency(render);

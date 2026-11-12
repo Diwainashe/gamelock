@@ -8,7 +8,7 @@
       const first = p.items[0], min = Math.min(...p.items.map(x => x.priceCents));
       const card = gcard(p, face(first.faceValue, first.faceCurrency) + '+');
       tilt(card);
-      return h('a', { class: 'pcard rise', href: `/product.html?p=${encodeURIComponent(p.id)}`, 'aria-label': `${p.platformName}, from ${money(min)}` },
+      return h('a', { class: 'pcard rise', href: `product.html?p=${encodeURIComponent(p.id)}`, 'aria-label': `${p.platformName}, from ${money(min)}` },
         card,
         h('div', { class: 'meta' }, h('b', { text: p.platformName }), h('span', { text: `from ${money(min)}` })));
     }));
